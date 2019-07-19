@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    gopiece.cpp
+    gopiece.cpp \
+    gamelogic.cpp
 
 HEADERS += \
         mainwindow.h \
-    gopiece.h
+    gopiece.h \
+    gamelogic.h
 
 FORMS += \
         mainwindow.ui

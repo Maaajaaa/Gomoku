@@ -10,10 +10,10 @@ public:
     goPiece(QWidget *parent = nullptr);
     void setUse(int type);
     int getUse();
-    ~goPiece(){}
+    ~goPiece(){};
 
 signals:
-    void clicked();
+    void clicked(goPiece*);
 
 public slots:
 
@@ -23,7 +23,7 @@ private:
     int useID=0;
 
 protected:
-    void mousePressEvent(QMouseEvent *event) { emit clicked(); }
+    void mousePressEvent(QMouseEvent *event) { emit clicked(this); }
  };
 
 
