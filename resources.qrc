@@ -3,5 +3,7 @@
         <file>blackPiece.png</file>
         <file>noPiece.png</file>
         <file>whitePiece.png</file>
+        <file>blackWinningPiece.png</file>
+        <file>whiteWinningPiece.png</file>
     </qresource>
 </RCC>

@@ -46,7 +46,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     blackPiece.png \
     noPiece.png \
-    whitePiece.png
+    whitePiece.png \
+    blackWinningPiece.png \
+    whiteWinningPiece.png
 
 RESOURCES += \
     resources.qrc
