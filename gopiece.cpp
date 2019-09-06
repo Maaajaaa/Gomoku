@@ -32,6 +32,21 @@ int goPiece::getUse(){
     return useID;
 }
 
+void goPiece::setTextAndPixmap(QString text)
+{
+    switch (useID) {
+        case 0:
+            this->setText(QString("<html><style>.container {  position: relative;  text-align: center;  color: white;}.centered {  position: absolute;  top: 50%;  left: 50%;transform: translate(-50%, -50%);}</style> <div class='container'>  <img src=':resources/noPiece.png' width='50'> <div class='centered'><font color='red'>" + text + "</font></div></div> </html>"));
+            break;
+        case 1:
+            this->setText(QString("<html><style>.container {  position: relative;  text-align: center;  color: white;}.centered {  position: absolute;  top: 50%;  left: 50%;transform: translate(-50%, -50%);}</style> <div class='container'>  <img src=':resources/blackPiece.png' width='50'> <div class='centered'><font color='red'>" + text + "</font></div></div> </html>"));
+            break;
+        case 2:
+            this->setText(QString("<html><style>.container {  position: relative;  text-align: center;  color: white;}.centered {  position: absolute;  top: 50%;  left: 50%;transform: translate(-50%, -50%);}</style> <div class='container'>  <img src=':resources/whitePiece.png' width='50'> <div class='centered'><font color='red'>" + text + "</font></div></div> </html>"));
+            break;
+    }
+}
+
 void goPiece::cycleModes(){
     int currentMode = getUse();
     currentMode++;

@@ -20,6 +20,7 @@ public:
 
 public slots:
     void showMoveOnBoard(int x, int y, int type);
+    void displayValuesOnBoard(QVector<QVector<int>> chains);
     void newPieceSet(goPiece*);
     void showWinner(int type);
 
@@ -32,7 +33,9 @@ private:
     GameLogic gamelogic;    
     QVector<goPiece*> goPieces;
     //colour that had last turn
-    bool lastMove;
+    bool lastMove = false;
+    int gameMode = 0; //0 - single player, 1 - multiplayer
+    bool beginningColour = 0; //0 - black, 1 - white
 };
 
 #endif // MAINWINDOW_H

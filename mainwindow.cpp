@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
             goPiece* testPiece = new goPiece();
             goPieces.append(testPiece);
             connect(testPiece, SIGNAL(clicked(goPiece*)), this, SLOT(newPieceSet(goPiece*)));
-
            this->ui->gridLayout_2->addWidget(testPiece,x,y);
         }
     }
@@ -68,18 +67,38 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sendMoveToLogic(int,int,int)),gamelog,SLOT(processMove(int,int,int)));
     connect(gamelog,SIGNAL(pieceChanged(int,int,int)), this, SLOT(showMoveOnBoard(int,int,int)));
     connect(gamelog, SIGNAL(foundWinner(int)), this, SLOT(showWinner(int)));
+    connect(gamelog, SIGNAL(valueTableUpdated(QVector<QVector<int>>)), this, SLOT(displayValuesOnBoard(QVector<QVector<int>>)));
+
+    //determine single-player/multi player mode
+    QMessageBox playerBox;
+    playerBox.setText("Select the Game mode");
+    playerBox.setInformativeText("What Game wouldt you like?");
+    playerBox.addButton(tr("Single Player (computer begins)"),QMessageBox::NoRole);
+    playerBox.addButton(tr("Multi Player"),QMessageBox::YesRole);
+    gameMode = playerBox.exec();
+
 
     //ask for begining colour
     QMessageBox msgBox;
-    msgBox.setText("Select begining colour.");
+    if(gameMode == 0){
+        msgBox.setText("Select your colour.");
+    }else {
+        msgBox.setText("Select begining colour.");
+    }
     msgBox.setInformativeText("Black or white?");
     msgBox.addButton(tr("Black"),QMessageBox::NoRole);
     msgBox.addButton(tr("White"),QMessageBox::YesRole);
-    int ret = msgBox.exec();
-    lastMove = ret;
-
+    //0 - black 1 - white (different to colour-coding in Gamelogic)
+    bool selectedColour = msgBox.exec();
+    if(gameMode == 0){
+        if(selectedColour == 1)beginningColour = 0;
+        else if(selectedColour == 0)beginningColour = 1;
+    }
+    gamelog->setColourAndMode(beginningColour,gameMode);
+    lastMove = beginningColour;
     //set first piece
-    emit sendMoveToLogic(7,7,ret+1);
+    emit sendMoveToLogic(7,7,beginningColour+1);
+
 }
 
 MainWindow::~MainWindow(){
@@ -90,6 +109,16 @@ void MainWindow::showMoveOnBoard(int x, int y, int type)
 {
     goPieces.at(y*15+x)->setUse(type);
     goPieces.at(y*15+x)->setEnabled(false);
+}
+
+void MainWindow::displayValuesOnBoard(QVector<QVector<int>> values)
+{
+    //qDebug() << values[7][7];
+    for(int y=0;y<15;y++){
+        for (int x=0;x<15;x++) {
+            goPieces.at(y*15+x)->setTextAndPixmap(QString::number(values[x][y]));
+        }
+    }
 }
 
 void MainWindow::newPieceSet(goPiece* piece)
@@ -107,6 +136,7 @@ void MainWindow::showWinner(int type)
     }else if (type == 2) {
         winner = "White";
     }
-    int ret = QMessageBox::warning(this, tr("Game finished"),
+    int ret = QMessageBox::warning(this, "Game finished",
                                    winner + " won!");
+    ///TODO: new game
 }

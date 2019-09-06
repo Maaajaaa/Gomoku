@@ -10,6 +10,7 @@ public:
     goPiece(QWidget *parent = nullptr);
     void setUse(int type);
     int getUse();
+    void setTextAndPixmap(QString text);
     ~goPiece(){};
 
 signals:
