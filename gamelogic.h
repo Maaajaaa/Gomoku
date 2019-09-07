@@ -20,13 +20,12 @@ signals:
     void sendError(QString errorMessage);
     void foundWinner(int type);
     void valueTableUpdated(QVector<QVector<int>> chains);
+    void computerTurnDecided(int, int);
 
 private:
     bool beginningColour = 0; //0-black 1-white
     int gameMode = 0;   //0 - singleplayer 1- multiplayer
     int boardArray[15][15];
-    int xToCheck(int i);
-    int yToCheck(int i);
     void computersMove(QVector<QVector<int>> chains);
 };
 

@@ -20,6 +20,7 @@ public:
 
 public slots:
     void showMoveOnBoard(int x, int y, int type);
+    void computerTurn(int x, int y);
     void displayValuesOnBoard(QVector<QVector<int>> chains);
     void newPieceSet(goPiece*);
     void showWinner(int type);

@@ -129,23 +129,38 @@ void GameLogic::computersMove(QVector<QVector<int>> chains)
                         int yToCheck = y + possibleMoves[i][1];
                         int firstXinDirection = xToCheck;
                         int firstYinDirection = yToCheck;
+                        QVector<QVector<int>> gaps;
                         //as long as the new field is valid and the same colour as the first adjacent field in the current direction
                         while(xToCheck < 15 && xToCheck > 0 && yToCheck < 15 && yToCheck > 0 && boardArray[firstXinDirection][firstYinDirection] == boardArray[xToCheck][yToCheck] && boardArray[xToCheck][yToCheck] != 0){
                             chainLength++;
                             xToCheck = x + ((chainLength+1)*possibleMoves[i][0]);
                             yToCheck = y + ((chainLength+1)*possibleMoves[i][1]);
-                            if(chainLength == 2){
-                                qDebug() << "X|Y: " << x << "|" << y << " xtc|ytc: " << xToCheck << "|" << yToCheck << " direction" << possibleMoves[i];
+                            //detect complete-in-the-middle chains, there could be very nasty jump combinations of gaps such as
+                            // 1 stone 1 free 2 stones 1 free 1 stone where in oder to intercept awareness of every gap is required
+                            if(boardArray[xToCheck][yToCheck] == 0){
+                                //see what's behind the gap
+                                int tempChainLength = chainLength + 1;
+                                int jumpyXToCheck = x + ((tempChainLength+1)*possibleMoves[i][0]);
+                                int jumpyYToCheck = y + ((tempChainLength+1)*possibleMoves[i][1]);
+                                //if chain does continue after the gap (only relevant for player's colour
+                                if(jumpyXToCheck < 15 && jumpyXToCheck > 0 && jumpyYToCheck < 15 && jumpyYToCheck > 0 && boardArray[firstXinDirection][firstYinDirection] == boardArray[jumpyXToCheck][jumpyYToCheck]
+                                        && boardArray[firstXinDirection][firstYinDirection] == !beginningColour + 1){
+                                    //save the gap position, it's needed to give it the right rating later on
+                                    gaps.append({xToCheck, yToCheck});
+                                    //continue scanning the regular way
+                                    xToCheck = jumpyXToCheck;
+                                    yToCheck = jumpyYToCheck;
+                                    chainLength = tempChainLength;
+                                }
                             }
                         }
-                        //chain length is actually one ahead since the checked field
                         //get a temporary rating which might be applied
                         int tempRating = 0;
                         //determine whose chain it is (remember different colour coding)
-
                         if(boardArray[firstXinDirection][firstYinDirection] - 1 == !beginningColour){
                             //player's chain
-                            switch (chainLength) {
+                            qDebug() << "Ch: " << chainLength << " gaps: " << gaps.length();
+                            switch (chainLength-gaps.length()) {
                                 case 1:
                                 case 2:
                                     tempRating = 2;
@@ -155,6 +170,21 @@ void GameLogic::computersMove(QVector<QVector<int>> chains)
                                     tempRating = 5;
                                     break;
                             }
+
+                            //correct the rating if the other end of the chain is blocked (as it can be blocked by just one stone)
+                            if(boardArray[xToCheck][yToCheck] -1 == beginningColour && chainLength !=4){
+                                tempRating--;
+                            }
+
+                            //apply gap ratings
+                            for(int i = 0; i < gaps.length(); i++){
+                                //apply chain end rating to the gap as well
+                                ratings[gaps[i][0]][gaps[i][1]] = tempRating;
+                                if(chainLength==5){
+                                    ratings[gaps[i][0]][gaps[i][1]] = 5;
+                                }
+                            }
+
                         }else if(boardArray[firstXinDirection][firstYinDirection] - 1 == beginningColour) {
                             //computer's chain
                             switch (chainLength) {
@@ -171,15 +201,19 @@ void GameLogic::computersMove(QVector<QVector<int>> chains)
                                     tempRating = 6;
                                     break;
                             }
+
+                            //correct the rating if the other end of the chain is blocked
+                            if(boardArray[xToCheck][yToCheck] -1 == !beginningColour && chainLength !=4){
+                                tempRating--;
+                            }
                         }
                         //apply tempRating (if bigger than old rating)
                         if(tempRating > rating){
                             rating = tempRating;
                         }
-
                     }
                     //0 chain length is irrelevant
-                    if(rating > 0){
+                    if(rating > 0 && ratings[x][y] < rating){
                         ratings[x][y] = rating;
                     }
                     break;
@@ -193,4 +227,15 @@ void GameLogic::computersMove(QVector<QVector<int>> chains)
          }
     }
     emit valueTableUpdated(ratings);
+    int highestX = 0;
+    int highestY = 0;
+    for (int x = 0; x<15; x++) {
+        for(int y = 0; y<15; y++){
+            if(ratings[x][y] > ratings[highestX][highestY]){
+                highestX = x;
+                highestY = y;
+            }
+        }
+    }
+    emit computerTurnDecided(highestX, highestY);
 }

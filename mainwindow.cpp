@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(gamelog,SIGNAL(pieceChanged(int,int,int)), this, SLOT(showMoveOnBoard(int,int,int)));
     connect(gamelog, SIGNAL(foundWinner(int)), this, SLOT(showWinner(int)));
     connect(gamelog, SIGNAL(valueTableUpdated(QVector<QVector<int>>)), this, SLOT(displayValuesOnBoard(QVector<QVector<int>>)));
+    connect(gamelog, SIGNAL(computerTurnDecided(int,int)), this, SLOT(computerTurn(int,int)));
 
     //determine single-player/multi player mode
     QMessageBox playerBox;
@@ -107,8 +108,17 @@ MainWindow::~MainWindow(){
 
 void MainWindow::showMoveOnBoard(int x, int y, int type)
 {
+    qDebug() << goPieces.at(y*15+x)->text();
     goPieces.at(y*15+x)->setUse(type);
-    goPieces.at(y*15+x)->setEnabled(false);
+    ///TODO: fix this properly
+    //goPieces.at(y*15+x)->setEnabled(false);
+    lastMove = type -1;
+}
+
+void MainWindow::computerTurn(int x, int y)
+{
+    //lastMove = !lastMove;
+    emit sendMoveToLogic(x, y, beginningColour+1);
 }
 
 void MainWindow::displayValuesOnBoard(QVector<QVector<int>> values)
@@ -125,7 +135,6 @@ void MainWindow::newPieceSet(goPiece* piece)
 {
     int index = goPieces.indexOf(piece);
     emit sendMoveToLogic(index%15, index/15, !lastMove+1);
-    lastMove = !lastMove;
 }
 
 void MainWindow::showWinner(int type)
