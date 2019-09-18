@@ -23,13 +23,43 @@ void GameLogic::processMove(int x, int y, int type=0)
 {
     if(!(boardArray[x][y]==0) ){
         ///TODO: proper exception
-        emit sendError("Invalid Move, spot already taken");
+        emit displayMessage("Invalid Move, spot already taken");
         return;
     }else {
+
+        //count up turn count
+        turnCount++;
+
+        //check Renju opening for validity
+        if(gameMode == 3 && (turnCount == 2 || turnCount == 3)){
+            switch (turnCount) {
+            case 2:
+                //2nd move must be within center 3x3 square
+                if(!(x>=6 && x<=8 && y>=6 && y<=8)){
+                    //invalid move
+                    turnCount--;
+                    emit displayMessage("Invalid move, 2nd move must be within center 3x3 square");
+                    return;
+                }
+            break;
+            case 3:
+                //3rd move must be within center 5x5 square
+                if(!(x>=5 && x<=9 && y>=5 && y<=9)){
+                    //invalid move
+                    turnCount--;
+                    emit displayMessage("Invalid move, 3rd move must be within center 5x5 square");
+                    return;
+                }
+
+            break;
+            }
+        }
+
         //set new move in board array
         boardArray[x][y]=type;
         //send change back to UI
         emit pieceChanged(x,y,type);
+
         //look for chains
 
         //make value matrix which will store the length of the longest chain that stones (of the last mover) connected, where 1 single stone is associalted with 1 and no stone with 0
@@ -83,6 +113,11 @@ void GameLogic::processMove(int x, int y, int type=0)
         if(gameMode == 0 && type == beginningColour){
             //computer's turn
             computersMove(chains);
+        }
+
+        //if 3rd turn of Renju is played there's a notification reminding the second player to pick their colour now
+        if(gameMode == 3 && turnCount == 3){
+            emit displayMessage("Player 2's turn to pick their colour. Next turn will be white");
         }
     }
 

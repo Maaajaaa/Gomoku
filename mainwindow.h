@@ -24,6 +24,7 @@ public slots:
     void displayValuesOnBoard(QVector<QVector<int>> chains);
     void newPieceSet(goPiece*);
     void showWinner(int type);
+    void showMessage(QString message);
 
 signals:
     void sendMoveToLogic(int x, int y, int type);
@@ -35,7 +36,7 @@ private:
     QVector<goPiece*> goPieces;
     //colour that had last turn
     bool lastMove = false;
-    int gameMode = 0; //0 - single player, 1 - multiplayer
+    int gameMode = 0; //0 - single player, 1 - multiplayer 2- renju (single-player)
     bool beginningColour = 0; //0 - black, 1 - white
 };
 

@@ -69,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(gamelog, SIGNAL(foundWinner(int)), this, SLOT(showWinner(int)));
     connect(gamelog, SIGNAL(valueTableUpdated(QVector<QVector<int>>)), this, SLOT(displayValuesOnBoard(QVector<QVector<int>>)));
     connect(gamelog, SIGNAL(computerTurnDecided(int,int)), this, SLOT(computerTurn(int,int)));
+    connect(gamelog, SIGNAL(displayMessage(QString)), this, SLOT(showMessage(QString)));
 
     //determine single-player/multi player mode
     QMessageBox playerBox;
@@ -78,22 +79,39 @@ MainWindow::MainWindow(QWidget *parent) :
     playerBox.addButton(tr("Multi Player"),QMessageBox::YesRole);
     gameMode = playerBox.exec();
 
+    //If single-player ask for Go-Moku or Renju
+    if(gameMode == 1){
+        QMessageBox renjuBox;
+        renjuBox.setText("Select the Game");
+        renjuBox.setInformativeText("Go-Moku is classic but not fair since beginning player has much better odds. Renju is more balanced.");
+        renjuBox.addButton(tr("Go-Moku"),QMessageBox::NoRole);
+        renjuBox.addButton(tr("Renju"),QMessageBox::YesRole);
+        bool renju = renjuBox.exec();
+        if(renju){
+            gameMode = 3;
+            //in Renju black always begins
+            beginningColour = 0;
+        }
+    }
+
 
     //ask for begining colour
-    QMessageBox msgBox;
-    if(gameMode == 0){
-        msgBox.setText("Select your colour.");
-    }else {
-        msgBox.setText("Select begining colour.");
-    }
-    msgBox.setInformativeText("Black or white?");
-    msgBox.addButton(tr("Black"),QMessageBox::NoRole);
-    msgBox.addButton(tr("White"),QMessageBox::YesRole);
-    //0 - black 1 - white (different to colour-coding in Gamelogic)
-    bool selectedColour = msgBox.exec();
-    if(gameMode == 0){
-        if(selectedColour == 1)beginningColour = 0;
-        else if(selectedColour == 0)beginningColour = 1;
+    if(gameMode != 3){
+        QMessageBox msgBox;
+        if(gameMode == 0){
+            msgBox.setText("Select your colour.");
+        }else if(gameMode == 1){
+            msgBox.setText("Select begining colour.");
+        }
+        msgBox.setInformativeText("Black or white?");
+        msgBox.addButton(tr("Black"),QMessageBox::NoRole);
+        msgBox.addButton(tr("White"),QMessageBox::YesRole);
+        //0 - black 1 - white (different to colour-coding in Gamelogic)
+        bool selectedColour = msgBox.exec();
+        if(gameMode == 0){
+            if(selectedColour == 1)beginningColour = 0;
+            else if(selectedColour == 0)beginningColour = 1;
+        }
     }
     gamelog->setColourAndMode(beginningColour,gameMode);
     lastMove = beginningColour;
@@ -148,4 +166,11 @@ void MainWindow::showWinner(int type)
     int ret = QMessageBox::warning(this, "Game finished",
                                    winner + " won!");
     ///TODO: new game
+}
+
+void MainWindow::showMessage(QString message)
+{
+    QMessageBox msgBox;
+    msgBox.setText(message);
+    msgBox.exec();
 }
