@@ -14,11 +14,6 @@ GameLogic::~GameLogic()
 
 }
 
-void GameLogic::newPieceSet(int x, int y)
-{
-    qDebug() << "new piece set x:" << x << " y: " << y;
-}
-
 void GameLogic::processMove(int x, int y, int type=0)
 {
     if(!(boardArray[x][y]==0) ){
@@ -112,7 +107,7 @@ void GameLogic::processMove(int x, int y, int type=0)
         //emit valueTableUpdated(chains);
         if(gameMode == 0 && type == beginningColour){
             //computer's turn
-            computersMove(chains);
+            computersMove();
         }
 
         //if 3rd turn of Renju is played there's a notification reminding the second player to pick their colour now
@@ -129,7 +124,7 @@ void GameLogic::setColourAndMode(bool mbeginningColour, int mgameMode)
     gameMode = mgameMode;
 }
 
-void GameLogic::computersMove(QVector<QVector<int>> chains)
+void GameLogic::computersMove()
 {
     /*make value matrix which will value:
      * NOTE: having a defense and an offense rating would allow for different playing styles
@@ -261,7 +256,7 @@ void GameLogic::computersMove(QVector<QVector<int>> chains)
              }
          }
     }
-    emit valueTableUpdated(ratings);
+    //emit valueTableUpdated(ratings);
     int highestX = 0;
     int highestY = 0;
     for (int x = 0; x<15; x++) {

@@ -34,8 +34,7 @@ private:
     QGridLayout *mainGrid;
     GameLogic gamelogic;    
     QVector<goPiece*> goPieces;
-    //colour that had last turn
-    bool lastMove = false;
+    bool lastMove = false;  //colour that had last turn
     int gameMode = 0; //0 - single player, 1 - multiplayer 2- renju (single-player)
     bool beginningColour = 0; //0 - black, 1 - white
 };

@@ -56,12 +56,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //set board as background
     palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
     this->setPalette(palette);
-    /*Algorith for checking the rows:
-     * iterate over the list, check every item for connected rows, to to the end, write score into new table. iterate on and try to find longer lists
-     * 10111  gives     2 2 3 3 3
-     * 01000            2 2 3 3 3
-     * technically no complete recounting is required, the new pieces and ajdcacents should suffice
-     */
 
     //connect game logic to UI interaction
     connect(this, SIGNAL(sendMoveToLogic(int,int,int)),gamelog,SLOT(processMove(int,int,int)));
@@ -94,7 +88,6 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
 
-
     //ask for begining colour
     if(gameMode != 3){
         QMessageBox msgBox;
@@ -117,7 +110,6 @@ MainWindow::MainWindow(QWidget *parent) :
     lastMove = beginningColour;
     //set first piece
     emit sendMoveToLogic(7,7,beginningColour+1);
-
 }
 
 MainWindow::~MainWindow(){

@@ -11,7 +11,6 @@ public:
     ~GameLogic();
 
 public slots:
-    void newPieceSet(int x, int y);
     void processMove(int x, int y, int type);
     void setColourAndMode(bool mbeginningColour, int mgameMode);
 
@@ -27,7 +26,7 @@ private:
     int gameMode = 0;   //0 - singleplayer 1- multiplayer 2- renju (single-player)
     int turnCount = 0;  //number of turns
     int boardArray[15][15]; //representation of the board
-    void computersMove(QVector<QVector<int>> chains);
+    void computersMove();
 };
 
 #endif // GAMELOGIC_H

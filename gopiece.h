@@ -11,7 +11,7 @@ public:
     void setUse(int type);
     int getUse();
     void setTextAndPixmap(QString text);
-    ~goPiece(){};
+    ~goPiece(){}
 
 signals:
     void clicked(goPiece*);
