@@ -17,7 +17,7 @@ public slots:
 signals:
     void pieceChanged(int x, int y, int type);
     void displayMessage(QString errorMessage);
-    void foundWinner(int type);
+    void foundWinner(int type, int turnCount);
     void valueTableUpdated(QVector<QVector<int>> chains);
     void computerTurnDecided(int, int);
 

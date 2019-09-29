@@ -1,16 +1,15 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "gopiece.h"
 #include "boardwidget.h"
+#include "ui_boardwidget.h"
+#include "gopiece.h"
 #include <QPainter>
 #include <QtDebug>
 #include <QMessageBox>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow){
+BoardWidget::BoardWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::BoardWidget)
+{
     ui->setupUi(this);
-    //this->setStyleSheet("background-color: blue;");
 
     this->setWindowTitle("Gomoku");
     GameLogic *gamelog = new GameLogic();
@@ -26,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     //show to get right geometry next
-    ui->mainWidget->show();
     this->show();
 
     //draw board
@@ -58,12 +56,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //set board as background
     palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
     this/*->ui->tabWidget*/->setPalette(palette);
-
-    HighscoreDialog *highdiag = new HighscoreDialog();
-    //highdiag->show();
-
-    BoardWidget *mBoardWidget = new BoardWidget();
-    mBoardWidget->show();
 
     //connect game logic to UI interaction
     connect(this, SIGNAL(sendMoveToLogic(int,int,int)),gamelog,SLOT(processMove(int,int,int)));
@@ -120,11 +112,8 @@ MainWindow::MainWindow(QWidget *parent) :
     emit sendMoveToLogic(7,7,beginningColour+1);
 }
 
-MainWindow::~MainWindow(){
-    delete ui;
-}
 
-void MainWindow::showMoveOnBoard(int x, int y, int type)
+void BoardWidget::showMoveOnBoard(int x, int y, int type)
 {
     qDebug() << goPieces.at(y*15+x)->text();
     goPieces.at(y*15+x)->setUse(type);
@@ -133,13 +122,13 @@ void MainWindow::showMoveOnBoard(int x, int y, int type)
     lastMove = type -1;
 }
 
-void MainWindow::computerTurn(int x, int y)
+void BoardWidget::computerTurn(int x, int y)
 {
     //lastMove = !lastMove;
     emit sendMoveToLogic(x, y, beginningColour+1);
 }
 
-void MainWindow::displayValuesOnBoard(QVector<QVector<int>> values)
+void BoardWidget::displayValuesOnBoard(QVector<QVector<int>> values)
 {
     //qDebug() << values[7][7];
     for(int y=0;y<15;y++){
@@ -149,13 +138,13 @@ void MainWindow::displayValuesOnBoard(QVector<QVector<int>> values)
     }
 }
 
-void MainWindow::newPieceSet(goPiece* piece)
+void BoardWidget::newPieceSet(goPiece* piece)
 {
     int index = goPieces.indexOf(piece);
     emit sendMoveToLogic(index%15, index/15, !lastMove+1);
 }
 
-void MainWindow::showWinner(int type, int turnCount)
+void BoardWidget::showWinner(int type, int turnCount)
 {
     QString winner;
     if(type == 1){
@@ -168,9 +157,15 @@ void MainWindow::showWinner(int type, int turnCount)
     ///TODO: new game
 }
 
-void MainWindow::showMessage(QString message)
+void BoardWidget::showMessage(QString message)
 {
     QMessageBox msgBox;
     msgBox.setText(message);
     msgBox.exec();
+}
+
+
+BoardWidget::~BoardWidget()
+{
+    delete ui;
 }

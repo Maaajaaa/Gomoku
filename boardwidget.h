@@ -1,23 +1,21 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef BOARDWIDGET_H
+#define BOARDWIDGET_H
 
-#include <QMainWindow>
-#include <QGridLayout>
+#include <QWidget>
 #include <gamelogic.h>
 #include <gopiece.h>
-#include <highscoredialog.h>
 
 namespace Ui {
-class MainWindow;
+class BoardWidget;
 }
 
-class MainWindow : public QMainWindow
+class BoardWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit BoardWidget(QWidget *parent = nullptr);
+    ~BoardWidget();
 
 public slots:
     void showMoveOnBoard(int x, int y, int type);
@@ -31,13 +29,12 @@ signals:
     void sendMoveToLogic(int x, int y, int type);
 
 private:
-    Ui::MainWindow *ui;
-    QGridLayout *mainGrid;
-    GameLogic gamelogic;    
+    Ui::BoardWidget *ui;
+    GameLogic gamelogic;
     QVector<goPiece*> goPieces;
     bool lastMove = false;  //colour that had last turn
     int gameMode = 0; //0 - single player, 1 - multiplayer 2- renju (single-player)
     bool beginningColour = 0; //0 - black, 1 - white
 };
 
-#endif // MAINWINDOW_H
+#endif // BOARDWIDGET_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>206</width>
-    <height>192</height>
+    <width>490</width>
+    <height>444</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,10 +23,10 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="mainWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <property name="sizeConstraint">
-     <enum>QLayout::SetFixedSize</enum>
-    </property>
+   <layout class="QGridLayout" name="gameBoardLayout">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout"/>
+    </item>
    </layout>
   </widget>
  </widget>

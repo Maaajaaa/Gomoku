@@ -92,7 +92,7 @@ void GameLogic::processMove(int x, int y, int type=0)
                             }
                         }
                         if(chainLength >= 5){
-                            emit foundWinner(type);
+                            emit foundWinner(type, turnCount);
                             //show winning combination
                             for (;chainLength > 0; chainLength--) {
                                 emit pieceChanged(x + ((chainLength-1)*possibleMoves[i][0]),y + ((chainLength-1)*possibleMoves[i][1]), type+2);
