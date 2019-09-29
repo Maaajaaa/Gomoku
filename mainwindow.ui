@@ -23,11 +23,7 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="mainWidget">
-   <layout class="QGridLayout" name="gameBoardLayout">
-    <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout"/>
-    </item>
-   </layout>
+   <layout class="QGridLayout" name="gameBoardLayout"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

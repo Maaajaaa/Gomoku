@@ -25,7 +25,8 @@ BoardWidget::BoardWidget(QWidget *parent) :
     }
 
     //show to get right geometry next
-    this->show();
+    parent->show();
+    this->adjustSize();
 
     //draw board
     QPixmap *pix = new QPixmap(this->size());
@@ -55,7 +56,7 @@ BoardWidget::BoardWidget(QWidget *parent) :
     QPalette palette;
     //set board as background
     palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
-    this/*->ui->tabWidget*/->setPalette(palette);
+    parent->setPalette(palette);
 
     //connect game logic to UI interaction
     connect(this, SIGNAL(sendMoveToLogic(int,int,int)),gamelog,SLOT(processMove(int,int,int)));

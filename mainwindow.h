@@ -17,18 +17,8 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    void showCentralWidget();
     ~MainWindow();
-
-public slots:
-    void showMoveOnBoard(int x, int y, int type);
-    void computerTurn(int x, int y);
-    void displayValuesOnBoard(QVector<QVector<int>> chains);
-    void newPieceSet(goPiece*);
-    void showWinner(int type, int turnCount);
-    void showMessage(QString message);
-
-signals:
-    void sendMoveToLogic(int x, int y, int type);
 
 private:
     Ui::MainWindow *ui;
