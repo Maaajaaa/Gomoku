@@ -6,6 +6,7 @@
 #include <gamelogic.h>
 #include <gopiece.h>
 #include <highscoredialog.h>
+#include <boardwidget.h>
 
 namespace Ui {
 class MainWindow;

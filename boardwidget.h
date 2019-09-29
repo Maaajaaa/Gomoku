@@ -2,8 +2,11 @@
 #define BOARDWIDGET_H
 
 #include <QWidget>
-#include <gamelogic.h>
-#include <gopiece.h>
+#include <QPainter>
+#include <QtDebug>
+#include <QMessageBox>
+#include "gamelogic.h"
+#include "gopiece.h"
 
 namespace Ui {
 class BoardWidget;

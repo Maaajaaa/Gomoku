@@ -1,18 +1,11 @@
 #include "boardwidget.h"
 #include "ui_boardwidget.h"
-#include "gopiece.h"
-#include <QPainter>
-#include <QtDebug>
-#include <QMessageBox>
 
 BoardWidget::BoardWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BoardWidget)
 {
     ui->setupUi(this);
-
-    this->setWindowTitle("Gomoku");
-    GameLogic *gamelog = new GameLogic();
     //QWidget boardWidget = new QWidget(this->ui->tabWidget);
 
     for(int x=0; x<15; x++){

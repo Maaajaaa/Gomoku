@@ -1,10 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "gopiece.h"
-#include "boardwidget.h"
-#include <QPainter>
-#include <QtDebug>
-#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
