@@ -17,7 +17,6 @@ MainMenu::~MainMenu()
 }
 
 //return selected game mode to main window
-
 void MainMenu::on_multiPlayerPushButton_clicked()
 {
     //0 - single player, 1 - multiplayer 2- renju (single-player)

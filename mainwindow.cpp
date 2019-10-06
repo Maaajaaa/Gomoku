@@ -14,18 +14,14 @@ MainWindow::~MainWindow(){
     delete ui;
 }
 
-//open
 void MainWindow::gameModeSelected(int gameMode)
 {
     //clear window
     this->setCentralWidget(nullptr);
+    this->setFixedSize(860,890);
     BoardWidget *mBoardWidget = new BoardWidget(this, gameMode);
     this->setCentralWidget(mBoardWidget);
     connect(mBoardWidget, SIGNAL(backToMainMenu()), this, SLOT(showMainMenu()));
-    /*this->centralWidget()->adjustSize();
-
-    this->centralWidget()->show();
-    mBoardWidget->show();*/
 }
 
 void MainWindow::showMainMenu()

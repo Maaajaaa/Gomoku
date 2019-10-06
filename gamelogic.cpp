@@ -17,7 +17,6 @@ GameLogic::~GameLogic()
 void GameLogic::processMove(int x, int y, int type=0)
 {
     if(!(board[x][y]==0) ){
-        ///TODO: proper exception
         emit displayMessage("Invalid Move, spot already taken");
         return;
     }else {
@@ -26,7 +25,7 @@ void GameLogic::processMove(int x, int y, int type=0)
         turnCount++;
 
         //check Renju opening for validity
-        if(gameMode == 3 && (turnCount == 2 || turnCount == 3)){
+        if(gameMode == 2 && (turnCount == 2 || turnCount == 3)){
             switch (turnCount) {
             case 2:
                 //2nd move must be within center 3x3 square
@@ -126,7 +125,7 @@ void GameLogic::processMove(int x, int y, int type=0)
 
         /*if 3rd turn of Renju is played there's a notification reminding
          * the second player to pick their colour now */
-        if(gameMode == 3 && turnCount == 3){
+        if(gameMode == 2 && turnCount == 3){
             emit displayMessage("Player 2's turn to pick their colour. \
                                     Next turn will be white");
         }

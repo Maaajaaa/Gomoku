@@ -9,13 +9,13 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
 {
     mParent = parent;
     ui->setupUi(this);
-    //QWidget boardWidget = new QWidget(this->ui->tabWidget);
 
     for(int x=0; x<15; x++){
         for(int y=0; y<15; y++){
             goPiece* testPiece = new goPiece();
             goPieces.append(testPiece);
-            connect(testPiece, SIGNAL(clicked(goPiece*)), this, SLOT(newPieceSet(goPiece*)));
+            connect(testPiece, SIGNAL(clicked(goPiece*)), this,
+                    SLOT(newPieceSet(goPiece*)));
             this->ui->gridLayout->addWidget(testPiece,x,y);
         }
     }
@@ -36,31 +36,38 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
     for(int x=0;x<15;x++){
         //vertical grid lines
         paint->drawLine(
-                    ui->gridLayout->itemAtPosition(x,0)->geometry().y()+halfWidth,
-                    ui->gridLayout->itemAtPosition(x,0)->geometry().x(),
-                    ui->gridLayout->itemAtPosition(x,14)->geometry().y()+halfWidth,
-                    ui->gridLayout->itemAtPosition(x,14)->geometry().x()+2*halfWidth);
+            ui->gridLayout->itemAtPosition(x,0)->geometry().y()+halfWidth,
+            ui->gridLayout->itemAtPosition(x,0)->geometry().x(),
+            ui->gridLayout->itemAtPosition(x,14)->geometry().y()+halfWidth,
+            ui->gridLayout->itemAtPosition(x,14)->geometry().x()+2*halfWidth);
         //horizontal grid lines
         paint->drawLine(
-                    ui->gridLayout->itemAtPosition(0,x)->geometry().y(),
-                    ui->gridLayout->itemAtPosition(0,x)->geometry().x()+halfWidth,
-                    ui->gridLayout->itemAtPosition(14,x)->geometry().y()+2*halfWidth,
-                    ui->gridLayout->itemAtPosition(14,x)->geometry().x()+halfWidth);
+            ui->gridLayout->itemAtPosition(0,x)->geometry().y(),
+            ui->gridLayout->itemAtPosition(0,x)->geometry().x()+halfWidth,
+            ui->gridLayout->itemAtPosition(14,x)->geometry().y()+2*halfWidth,
+            ui->gridLayout->itemAtPosition(14,x)->geometry().x()+halfWidth);
     }
     this->adjustSize();
 
     QPalette palette;
     //apply background
-    palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
+    palette.setBrush(QPalette::Background, pix->scaled(this->size(),
+                                                       Qt::IgnoreAspectRatio));
     parent->setPalette(palette);
 
     //connect game logic to UI interaction
-    connect(this, SIGNAL(sendMoveToLogic(int,int,int)),gamelog,SLOT(processMove(int,int,int)));
-    connect(gamelog,SIGNAL(pieceChanged(int,int,int)), this, SLOT(showMoveOnBoard(int,int,int)));
-    connect(gamelog, SIGNAL(foundWinner(int, int)), this, SLOT(showWinner(int, int)));
-    connect(gamelog, SIGNAL(valueTableUpdated(QVector<QVector<int>>)), this, SLOT(displayValuesOnBoard(QVector<QVector<int>>)));
-    connect(gamelog, SIGNAL(computerTurnDecided(int,int)), this, SLOT(computerTurn(int,int)));
-    connect(gamelog, SIGNAL(displayMessage(QString)), this, SLOT(showMessage(QString)));
+    connect(this, SIGNAL(sendMoveToLogic(int,int,int)),
+            gamelog,SLOT(processMove(int,int,int)));
+    connect(gamelog,SIGNAL(pieceChanged(int,int,int)),
+            this, SLOT(showMoveOnBoard(int,int,int)));
+    connect(gamelog, SIGNAL(foundWinner(int, int)),
+            this, SLOT(showWinner(int, int)));
+    connect(gamelog, SIGNAL(valueTableUpdated(QVector<QVector<int>>)),
+            this, SLOT(displayValuesOnBoard(QVector<QVector<int>>)));
+    connect(gamelog, SIGNAL(computerTurnDecided(int,int)),
+            this, SLOT(computerTurn(int,int)));
+    connect(gamelog, SIGNAL(displayMessage(QString)),
+            this, SLOT(showMessage(QString)));
 
 
     //set gameMode given by parent
@@ -68,7 +75,7 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
     qDebug() << mGameMode;
 
     //ask for begining colour
-    if(gameMode != 3){
+    if(gameMode != 2){
         QMessageBox msgBox;
         if(gameMode == 0){
             msgBox.setText("Select your colour.");
@@ -94,25 +101,21 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
 
 void BoardWidget::showMoveOnBoard(int x, int y, int type)
 {
-    qDebug() << goPieces.at(y*15+x)->text();
     goPieces.at(y*15+x)->setUse(type);
-    ///TODO: fix this properly
-    //goPieces.at(y*15+x)->setEnabled(false);
     lastMove = type -1;
 }
 
 void BoardWidget::computerTurn(int x, int y)
 {
-    //lastMove = !lastMove;
     emit sendMoveToLogic(x, y, beginningColour+1);
 }
 
 void BoardWidget::displayValuesOnBoard(QVector<QVector<int>> values)
 {
-    //qDebug() << values[7][7];
     for(int y=0;y<15;y++){
         for (int x=0;x<15;x++) {
-            goPieces.at(y*15+x)->setTextAndPixmap(QString::number(values[x][y]));
+            goPieces.at(y*15+x)->setTextAndPixmap(
+                        QString::number(values[x][y]));
         }
     }
 }
@@ -131,7 +134,7 @@ void BoardWidget::showWinner(int type, int turnCount)
     }else if (type == 2) {
         winner = "White";
     }
-    int ret = QMessageBox::warning(this, "Game finished", winner +
+    QMessageBox::warning(this, "Game finished", winner +
                                    " won! Within " + QString::number(turnCount)
                                    + " turns.");
 
@@ -139,14 +142,14 @@ void BoardWidget::showWinner(int type, int turnCount)
     //track highscore
     HighscoreDialog *highScoreDialog = new HighscoreDialog();
     //if eligable for top ten, show dialog and to ask for name
-    if(highScoreDialog->inTopTen(turnCount)){
-        QString nickName = QInputDialog::getText(this, tr("You are in the Top 10!"),
-                                                 tr("Enter your nickname for the highscore: "),
+    if( gameMode != 0 && highScoreDialog->inTopTen(turnCount)){
+        QString nickName = QInputDialog::getText(this,
+                                                 tr("You are in the Top 10!"),
+                                                 tr("Enter your nickname for /"
+                                                    "the highscore: "),
                                                  QLineEdit::Normal);
         highScoreDialog->addToScoreBoard(turnCount, nickName);
     }
-
-    ///TODO: new game
 }
 
 void BoardWidget::showMessage(QString message)

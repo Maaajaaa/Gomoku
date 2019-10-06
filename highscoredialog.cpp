@@ -8,7 +8,6 @@ HighscoreDialog::HighscoreDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("Highscores");
-    //model->setHorizontalHeaderItem(0, new QStandardItem("Rank"));
     model->setHorizontalHeaderItem(0, new QStandardItem("Name"));
     model->setHorizontalHeaderItem(1, new QStandardItem("Turns to win"));
 
@@ -42,8 +41,8 @@ HighscoreDialog::~HighscoreDialog()
     //delete ui;
 }
 
-/*returns place within top ten,
--1 if not within top 10 (as 11th place might be higher but not tracked)*/
+/* returns place within top ten,
+ * -1 if not within top 10 (as 11th place might be higher but not tracked)*/
 bool HighscoreDialog::inTopTen(int score)
 {
     //check if candidate fits in, smaller score is better
