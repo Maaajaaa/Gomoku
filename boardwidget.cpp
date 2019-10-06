@@ -1,10 +1,13 @@
 #include "boardwidget.h"
 #include "ui_boardwidget.h"
 
+#include <QInputDialog>
+
 BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
     QWidget(parent),
     ui(new Ui::BoardWidget)
 {
+    mParent = parent;
     ui->setupUi(this);
     //QWidget boardWidget = new QWidget(this->ui->tabWidget);
 
@@ -13,7 +16,7 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
             goPiece* testPiece = new goPiece();
             goPieces.append(testPiece);
             connect(testPiece, SIGNAL(clicked(goPiece*)), this, SLOT(newPieceSet(goPiece*)));
-            this->ui->gameBoardLayout->addWidget(testPiece,x,y);
+            this->ui->gridLayout->addWidget(testPiece,x,y);
         }
     }
 
@@ -33,20 +36,21 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
     for(int x=0;x<15;x++){
         //vertical grid lines
         paint->drawLine(
-                    ui->gameBoardLayout->itemAtPosition(x,0)->geometry().y()+halfWidth,
-                    ui->gameBoardLayout->itemAtPosition(x,0)->geometry().x(),
-                    ui->gameBoardLayout->itemAtPosition(x,14)->geometry().y()+halfWidth,
-                    ui->gameBoardLayout->itemAtPosition(x,14)->geometry().x()+2*halfWidth);
+                    ui->gridLayout->itemAtPosition(x,0)->geometry().y()+halfWidth,
+                    ui->gridLayout->itemAtPosition(x,0)->geometry().x(),
+                    ui->gridLayout->itemAtPosition(x,14)->geometry().y()+halfWidth,
+                    ui->gridLayout->itemAtPosition(x,14)->geometry().x()+2*halfWidth);
         //horizontal grid lines
         paint->drawLine(
-                    ui->gameBoardLayout->itemAtPosition(0,x)->geometry().y(),
-                    ui->gameBoardLayout->itemAtPosition(0,x)->geometry().x()+halfWidth,
-                    ui->gameBoardLayout->itemAtPosition(14,x)->geometry().y()+2*halfWidth,
-                    ui->gameBoardLayout->itemAtPosition(14,x)->geometry().x()+halfWidth);
+                    ui->gridLayout->itemAtPosition(0,x)->geometry().y(),
+                    ui->gridLayout->itemAtPosition(0,x)->geometry().x()+halfWidth,
+                    ui->gridLayout->itemAtPosition(14,x)->geometry().y()+2*halfWidth,
+                    ui->gridLayout->itemAtPosition(14,x)->geometry().x()+halfWidth);
     }
+    this->adjustSize();
 
     QPalette palette;
-    //set board as background
+    //apply background
     palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
     parent->setPalette(palette);
 
@@ -58,32 +62,10 @@ BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
     connect(gamelog, SIGNAL(computerTurnDecided(int,int)), this, SLOT(computerTurn(int,int)));
     connect(gamelog, SIGNAL(displayMessage(QString)), this, SLOT(showMessage(QString)));
 
-    /*//determine single-player/multi player mode
-    QMessageBox playerBox;
-    playerBox.setText("Select the Game mode");
-    playerBox.setInformativeText("What Game wouldt you like?");
-    playerBox.addButton(tr("Single Player (computer begins)"),QMessageBox::NoRole);
-    playerBox.addButton(tr("Multi Player"),QMessageBox::YesRole);
-    gameMode = playerBox.exec();*/
 
     //set gameMode given by parent
     gameMode = mGameMode;
     qDebug() << mGameMode;
-    /*
-    //If single-player ask for Go-Moku or Renju
-    if(gameMode == 1){
-        QMessageBox renjuBox;
-        renjuBox.setText("Select the Game");
-        renjuBox.setInformativeText("Go-Moku is classic but not fair since beginning player has much better odds. Renju is more balanced.");
-        renjuBox.addButton(tr("Go-Moku"),QMessageBox::NoRole);
-        renjuBox.addButton(tr("Renju"),QMessageBox::YesRole);
-        bool renju = renjuBox.exec();
-        if(renju){
-            gameMode = 3;
-            //in Renju black always begins
-            beginningColour = 0;
-        }
-    }*/
 
     //ask for begining colour
     if(gameMode != 3){
@@ -149,8 +131,20 @@ void BoardWidget::showWinner(int type, int turnCount)
     }else if (type == 2) {
         winner = "White";
     }
-    int ret = QMessageBox::warning(this, "Game finished",
-                                   winner + " won! Within " + QString::number(turnCount) + " turns.");
+    int ret = QMessageBox::warning(this, "Game finished", winner +
+                                   " won! Within " + QString::number(turnCount)
+                                   + " turns.");
+
+
+    //track highscore
+    HighscoreDialog *highScoreDialog = new HighscoreDialog();
+    //if eligable for top ten, show dialog and to ask for name
+    if(highScoreDialog->inTopTen(turnCount)){
+        QString nickName = QInputDialog::getText(this, tr("You are in the Top 10!"),
+                                                tr("Enter your nickname for the highscore: "), QLineEdit::Normal);
+        highScoreDialog->addToScoreBoard(turnCount, nickName);
+    }
+
     ///TODO: new game
 }
 
@@ -165,4 +159,25 @@ void BoardWidget::showMessage(QString message)
 BoardWidget::~BoardWidget()
 {
     delete ui;
+}
+
+void BoardWidget::on_backToMainMenuPushButton_clicked()
+{
+    QMessageBox msgBox;
+    msgBox.setInformativeText("Are you sure you want to go back to Main Menu");
+    msgBox.addButton(tr("Nope"),QMessageBox::NoRole);
+    msgBox.addButton(tr("Absolutely"),QMessageBox::YesRole);
+    bool goBack = msgBox.exec();
+    if(goBack){
+        //overdraw board
+        QPixmap *pix = new QPixmap(this->size());
+        //set background colour
+        pix->fill(QColor(220,220,220));
+        QPalette palette;
+        //apply background
+        palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
+        mParent->setPalette(palette);
+
+        emit backToMainMenu();
+    }
 }

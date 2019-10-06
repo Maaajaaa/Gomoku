@@ -13,7 +13,7 @@ MainMenu::MainMenu(QWidget *parent) :
 
 MainMenu::~MainMenu()
 {
-    delete ui;
+    //delete ui;
 }
 
 //return selected game mode to main window

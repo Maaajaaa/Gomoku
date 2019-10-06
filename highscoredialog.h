@@ -17,9 +17,13 @@ class HighscoreDialog : public QDialog
 public:
     explicit HighscoreDialog(QWidget *parent = nullptr);
     ~HighscoreDialog();
+    bool inTopTen(int scoreCount);
+    int addToScoreBoard(int score, QString name);
 
 private:
-    Ui::HighscoreDialog *ui;
+    void saveModelToCSV();
+    Ui::HighscoreDialog *ui;    
+    QStandardItemModel *model = new QStandardItemModel;
 };
 
 #endif // HIGHSCOREDIALOG_H

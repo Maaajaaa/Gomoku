@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include "gamelogic.h"
 #include "gopiece.h"
+#include "highscoredialog.h"
 
 namespace Ui {
 class BoardWidget;
@@ -30,12 +31,16 @@ public slots:
 
 signals:
     void sendMoveToLogic(int x, int y, int type);
+    void backToMainMenu();
+
+private slots:
+    void on_backToMainMenuPushButton_clicked();
 
 private:
     Ui::BoardWidget *ui;
-    GameLogic gamelogic;
     QVector<goPiece*> goPieces;
     GameLogic *gamelog = new GameLogic();
+    QWidget *mParent;
     bool lastMove = false;  //colour that had last turn
     int gameMode = 0; //0 - single player, 1 - multiplayer 2- renju (single-player)
     bool beginningColour = 0; //0 - black, 1 - white

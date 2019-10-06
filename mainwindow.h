@@ -19,11 +19,11 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    void showCentralWidget();
     ~MainWindow();
 
 public slots:
     void gameModeSelected(int gameMode);
+    void showMainMenu();
 
 private:
     Ui::MainWindow *ui;
