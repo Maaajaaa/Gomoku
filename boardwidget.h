@@ -17,7 +17,7 @@ class BoardWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BoardWidget(QWidget *parent = nullptr);
+    explicit BoardWidget(QWidget *parent = nullptr, int mGameMode=-1);
     ~BoardWidget();
 
 public slots:

@@ -30,19 +30,22 @@ SOURCES += \
     gopiece.cpp \
     gamelogic.cpp \
     highscoredialog.cpp \
-    boardwidget.cpp
+    boardwidget.cpp \
+    mainmenu.cpp
 
 HEADERS += \
         mainwindow.h \
     gopiece.h \
     gamelogic.h \
     highscoredialog.h \
-    boardwidget.h
+    boardwidget.h \
+    mainmenu.h
 
 FORMS += \
         mainwindow.ui \
     highscoredialog.ui \
-    boardwidget.ui
+    boardwidget.ui \
+    mainmenu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

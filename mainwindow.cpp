@@ -8,13 +8,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->setWindowTitle("Gomoku");
 
-    HighscoreDialog *highdiag = new HighscoreDialog();
-    //highdiag->show();
 
-    BoardWidget *mBoardWidget = new BoardWidget(this);
-    //mBoardWidget->show();
-    this->setCentralWidget(mBoardWidget);
+    MainMenu *mMainMenu = new MainMenu(this);
+    this->setCentralWidget(mMainMenu);
     this->centralWidget()->show();
+    connect(mMainMenu, SIGNAL(gameModeSelected(int)), this, SLOT(gameModeSelected(int)));
+
 }
 
 void MainWindow::showCentralWidget()
@@ -23,4 +22,18 @@ void MainWindow::showCentralWidget()
 
 MainWindow::~MainWindow(){
     delete ui;
+}
+
+//open
+void MainWindow::gameModeSelected(int gameMode)
+{
+    //clear window
+    qDebug() << gameMode;
+    this->setCentralWidget(nullptr);
+    BoardWidget *mBoardWidget = new BoardWidget(this, gameMode);
+    this->setCentralWidget(mBoardWidget);
+    this->centralWidget()->adjustSize();
+
+    this->centralWidget()->show();
+    mBoardWidget->show();
 }

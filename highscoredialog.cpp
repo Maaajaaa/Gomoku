@@ -3,7 +3,6 @@
 #include <QtDebug>
 
 HighscoreDialog::HighscoreDialog(QWidget *parent) :
-    QDialog(parent),
     ui(new Ui::HighscoreDialog)
 {
     ui->setupUi(this);

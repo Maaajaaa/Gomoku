@@ -1,7 +1,7 @@
 #include "boardwidget.h"
 #include "ui_boardwidget.h"
 
-BoardWidget::BoardWidget(QWidget *parent) :
+BoardWidget::BoardWidget(QWidget *parent, int mGameMode) :
     QWidget(parent),
     ui(new Ui::BoardWidget)
 {
@@ -30,7 +30,6 @@ BoardWidget::BoardWidget(QWidget *parent) :
     paint->setPen(QColor(12,12,12));
     //generate grid lines
     int halfWidth = goPieces.at(0)->geometry().width()/2;
-    qDebug() << this->size();
     for(int x=0;x<15;x++){
         //vertical grid lines
         paint->drawLine(
@@ -59,14 +58,18 @@ BoardWidget::BoardWidget(QWidget *parent) :
     connect(gamelog, SIGNAL(computerTurnDecided(int,int)), this, SLOT(computerTurn(int,int)));
     connect(gamelog, SIGNAL(displayMessage(QString)), this, SLOT(showMessage(QString)));
 
-    //determine single-player/multi player mode
+    /*//determine single-player/multi player mode
     QMessageBox playerBox;
     playerBox.setText("Select the Game mode");
     playerBox.setInformativeText("What Game wouldt you like?");
     playerBox.addButton(tr("Single Player (computer begins)"),QMessageBox::NoRole);
     playerBox.addButton(tr("Multi Player"),QMessageBox::YesRole);
-    gameMode = playerBox.exec();
+    gameMode = playerBox.exec();*/
 
+    //set gameMode given by parent
+    gameMode = mGameMode;
+    qDebug() << mGameMode;
+    /*
     //If single-player ask for Go-Moku or Renju
     if(gameMode == 1){
         QMessageBox renjuBox;
@@ -80,7 +83,7 @@ BoardWidget::BoardWidget(QWidget *parent) :
             //in Renju black always begins
             beginningColour = 0;
         }
-    }
+    }*/
 
     //ask for begining colour
     if(gameMode != 3){

@@ -7,6 +7,7 @@
 #include <gopiece.h>
 #include <highscoredialog.h>
 #include <boardwidget.h>
+#include <mainmenu.h>
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     void showCentralWidget();
     ~MainWindow();
+
+public slots:
+    void gameModeSelected(int gameMode);
 
 private:
     Ui::MainWindow *ui;

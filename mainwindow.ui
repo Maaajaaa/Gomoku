@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>444</height>
+    <width>852</width>
+    <height>852</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -23,6 +23,24 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="mainWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>852</width>
+     <height>852</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>852</width>
+     <height>852</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gameBoardLayout"/>
   </widget>
  </widget>
