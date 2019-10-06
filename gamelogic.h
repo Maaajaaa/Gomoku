@@ -25,7 +25,7 @@ private:
     bool beginningColour = 0; //0-black 1-white
     int gameMode = 0;   //0 - singleplayer 1- multiplayer 2- renju (single-player)
     int turnCount = 0;  //number of turns
-    int boardArray[15][15]; //representation of the board
+    int board[15][15]; //representation of the board
     void computersMove();
 };
 

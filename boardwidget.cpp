@@ -141,7 +141,8 @@ void BoardWidget::showWinner(int type, int turnCount)
     //if eligable for top ten, show dialog and to ask for name
     if(highScoreDialog->inTopTen(turnCount)){
         QString nickName = QInputDialog::getText(this, tr("You are in the Top 10!"),
-                                                tr("Enter your nickname for the highscore: "), QLineEdit::Normal);
+                                                 tr("Enter your nickname for the highscore: "),
+                                                 QLineEdit::Normal);
         highScoreDialog->addToScoreBoard(turnCount, nickName);
     }
 
@@ -175,7 +176,8 @@ void BoardWidget::on_backToMainMenuPushButton_clicked()
         pix->fill(QColor(220,220,220));
         QPalette palette;
         //apply background
-        palette.setBrush(QPalette::Background, pix->scaled(this->size(), Qt::IgnoreAspectRatio));
+        palette.setBrush(QPalette::Background,
+                         pix->scaled(this->size(), Qt::IgnoreAspectRatio));
         mParent->setPalette(palette);
 
         emit backToMainMenu();

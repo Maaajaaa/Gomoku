@@ -34,6 +34,7 @@ void MainWindow::showMainMenu()
     MainMenu *mMainMenu = new MainMenu(this);
     this->setCentralWidget(mMainMenu);
     this->centralWidget()->show();
-    connect(mMainMenu, SIGNAL(gameModeSelected(int)), this, SLOT(gameModeSelected(int)));
+    connect(mMainMenu, SIGNAL(gameModeSelected(int)),
+            this, SLOT(gameModeSelected(int)));
 
 }

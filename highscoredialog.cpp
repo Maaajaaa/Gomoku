@@ -23,8 +23,9 @@ HighscoreDialog::HighscoreDialog(QWidget *parent) :
                 QStringList rowItems = line.split(";", QString::SkipEmptyParts);
                 //fill row
                 for (int y=0; y<2; y++) {
-                    //simplified removes uneccesary whitespaces at the begin or end
-                    QStandardItem *item = new QStandardItem(rowItems.at(y).simplified());
+                    //simplified removes uneccesary whitespaces at the ends
+                    QStandardItem *item =
+                            new QStandardItem(rowItems.at(y).simplified());
                     item->setFlags(item->flags() ^ Qt::ItemIsEditable);
                     model->setItem(x,y,item);
                 }
@@ -41,11 +42,13 @@ HighscoreDialog::~HighscoreDialog()
     //delete ui;
 }
 
-//returns place within top ten, -1 if not within top 10 (as 11th place might be higher but not tracked)
+/*returns place within top ten,
+-1 if not within top 10 (as 11th place might be higher but not tracked)*/
 bool HighscoreDialog::inTopTen(int score)
 {
     //check if candidate fits in, smaller score is better
-    if(model->rowCount() < 10 || model->item(model->rowCount()-1,1)->text().toInt() > score){
+    if(model->rowCount() < 10
+            || model->item(model->rowCount()-1,1)->text().toInt() > score){
         return true;
     }
     else {
@@ -56,11 +59,13 @@ bool HighscoreDialog::inTopTen(int score)
 int HighscoreDialog::addToScoreBoard(int score, QString name)
 {
     //check if candidate fits in, smaller score is better
-    if(model->rowCount() < 10 || model->item(model->rowCount()-1,1)->text().toInt() > score)
+    if(model->rowCount() < 10
+            || model->item(model->rowCount()-1,1)->text().toInt() > score)
     {
         //check the candidates place
         int i = 0;
-        while(i<model->rowCount() -1 && model->item(i,1)->text().toInt() < score){
+        while(i<model->rowCount() -1 && model->item(i,1)->text().toInt()
+              < score){
             i++;
         }
 
@@ -95,7 +100,8 @@ void HighscoreDialog::saveModelToCSV()
         QTextStream stream(&highscoreFile);
         //put each row into a CSV-style line
         for (int x=0; x<model->rowCount(); x++) {
-            stream << model->item(x,0)->text() << ";" << model->item(x,1)->text() << "\n";
+            stream << model->item(x,0)->text() << ";"
+                   << model->item(x,1)->text() << "\n";
         }
         //save changes
         highscoreFile.close();
